@@ -1,4 +1,5 @@
 import { inject, injectable } from 'tsyringe';
+import { Users as User } from '@prisma/client';
 
 import AppError from '@shared/errors/AppError';
 
@@ -12,7 +13,7 @@ class CreateUserService {
     private usersRepository: UsersInterface
   ) {}
 
-  public async execute(userData: UserDTO): Promise<void> {
+  public async execute(userData: UserDTO): Promise<User> {
     const { email, password, userRegisterDbId } = userData;
 
     const findUserByEmail = await this.usersRepository.findByEmail(email);
@@ -27,11 +28,13 @@ class CreateUserService {
       throw new AppError('User register db already exists', 401);
     }
 
-    await this.usersRepository.create({
+    const user = await this.usersRepository.create({
       email,
       password,
       userRegisterDbId,
     });
+
+    return user;
   }
 }
 
