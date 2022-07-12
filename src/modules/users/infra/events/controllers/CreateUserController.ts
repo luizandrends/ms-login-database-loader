@@ -6,8 +6,6 @@ import { UserDTO } from '@modules/users/dtos/UserDTO';
 
 class CreateUserController {
   public async create(userData: UserDTO): Promise<void> {
-    console.log(userData);
-
     const createUserService = container.resolve(CreateUserService);
 
     await createUserService.execute(userData);
